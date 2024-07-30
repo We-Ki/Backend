@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require("../models/User");
 const utils = require("../utils");
 const passport = require("../config/passport");
+
 //모든 사용자 조회
 router.get(
   "/",
@@ -19,6 +20,7 @@ router.get(
   }
 );
 
+//내 정보 확인
 router.get(
   "/me",
   passport.authenticate("jwt", { session: false }),

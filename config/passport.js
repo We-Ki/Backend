@@ -2,16 +2,14 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
-// const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 
 //로컬 로그인 방식(사용자 명, 비밀번호 이용)
-
 passport.use(
   new LocalStrategy(
     {
-      usernameField: "username", // 3-1
-      passwordField: "password", // 3-1
+      usernameField: "username",
+      passwordField: "password",
       passReqToCallback: true,
     },
     async function (req, username, password, done) {
@@ -32,6 +30,7 @@ passport.use(
   )
 );
 
+//JWT 이용 로그인 방식
 passport.use(
   new JwtStrategy(
     {

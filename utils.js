@@ -1,4 +1,5 @@
 const utils = {};
+
 utils.parseError = function (errors) {
   var parsed = {};
   if (errors.name == "ValidationError") {

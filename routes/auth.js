@@ -5,7 +5,8 @@ const utils = require("../utils");
 const passport = require("../config/passport");
 const jwt = require("jsonwebtoken");
 
-router.post("/signin", (req, res) => {
+//회원가입
+router.post("/signup", (req, res) => {
   User.create(req.body)
     .then((user) => {
       res.send({ success: true, message: user._id });
@@ -15,7 +16,8 @@ router.post("/signin", (req, res) => {
     });
 });
 
-router.post("/login", function (req, res, next) {
+//로그인
+router.post("/signin", function (req, res, next) {
   var errors = {};
   var isValid = true;
 

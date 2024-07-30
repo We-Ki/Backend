@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+
 //사용자 모델 스키마
 const userSchema = mongoose.Schema(
   {
@@ -121,6 +122,7 @@ userSchema.path("password").validate(function (v) {
   }
 });
 
+//DB 저장 전 비빌번호 암호화
 userSchema.pre("save", function (next) {
   var user = this;
 
@@ -132,6 +134,7 @@ userSchema.pre("save", function (next) {
   }
 });
 
+//비밀번호 검증
 userSchema.methods.authenticate = function (password) {
   var user = this;
   return bcrypt.compareSync(password, user.password);
