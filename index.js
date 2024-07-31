@@ -27,6 +27,7 @@ app.use(passport.initialize());
 
 app.use("/auth", require("./routes/auth"));
 app.use("/users", require("./routes/users"));
+app.use("/farms", require("./routes/farms"));
 
 var port = process.env.PORT || 3000;
 app.listen(port, () => {
