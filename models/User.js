@@ -30,7 +30,7 @@ const userSchema = mongoose.Schema(
     },
     userGroup: {
       type: String,
-      enum: ["user", "admin"],
+      enum: ["user", "farmer"],
       default: "user",
     },
   },
