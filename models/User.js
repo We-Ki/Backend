@@ -36,6 +36,7 @@ const userSchema = mongoose.Schema(
   },
   {
     toObject: { virtuals: true },
+    versionKey: false,
   }
 );
 
