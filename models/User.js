@@ -33,6 +33,10 @@ const userSchema = mongoose.Schema(
       enum: ["user", "farmer"],
       default: "user",
     },
+    point: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     toObject: { virtuals: true },
