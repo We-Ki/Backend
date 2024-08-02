@@ -44,13 +44,32 @@ router.post(
     req.body.farm = req.params.id;
     User.findByIdAndUpdate(req.user._id, { $inc: { point: 10 } })
       .then((user) => {
-        console.log(user);
-        req.body.user = user._id;
         return Water.create(req.body);
       })
       .then((water) => {
-        console.log(water);
         return res.send({ success: true, message: water._id });
+      })
+      .catch((err) => {
+        return res.send({ success: false, message: util.parseError(err) });
+      });
+  }
+);
+
+router.post(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Farm.findById(req.params.id)
+      .then(async (farm) => {
+        console.log(farm.farmer);
+        console.log(req.user.id);
+        console.log(farm.farmer != req.user.id);
+        if (farm.farmer != req.user.id) {
+          farm.users.push(req.user._id);
+          await farm.save();
+          return res.send({ success: true, message: farm.users });
+        }
+        return res.send({ success: false, message: "Cannot join my Farm" });
       })
       .catch((err) => {
         return res.send({ success: false, message: util.parseError(err) });
