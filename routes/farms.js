@@ -42,11 +42,20 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     req.body.farm = req.params.id;
-    User.findByIdAndUpdate(req.user._id, { $inc: { point: 10 } })
-      .then((user) => {
-        return Water.create(req.body);
+    Farm.findById(req.params.id)
+      .populate("users")
+      .then((farm) => {
+        if (farm.users.some((user) => user._id == req.user.id)) {
+          req.body.user = req.user._id;
+          return Water.create(req.body);
+        }
+        return res.send({
+          success: false,
+          message: "You can only water where you joined in",
+        });
       })
-      .then((water) => {
+      .then(async (water) => {
+        await User.findByIdAndUpdate(req.user._id, { $inc: { point: 10 } });
         return res.send({ success: true, message: water._id });
       })
       .catch((err) => {
@@ -61,9 +70,6 @@ router.post(
   (req, res) => {
     Farm.findById(req.params.id)
       .then(async (farm) => {
-        console.log(farm.farmer);
-        console.log(req.user.id);
-        console.log(farm.farmer != req.user.id);
         if (farm.farmer != req.user.id) {
           farm.users.push(req.user._id);
           await farm.save();
