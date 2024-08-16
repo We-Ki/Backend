@@ -2,7 +2,13 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
+const cors = require("cors");
 require("dotenv").config();
+
+var corsOptions = {
+  origin: process.env.ORIGIN_URL,
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
 
 var session = require("express-session");
 var passport = require("./config/passport");
@@ -18,6 +24,8 @@ db.once("open", function () {
 db.on("error", function (err) {
   console.log("DB ERROR : ", err);
 });
+
+app.use(cors(corsOptions));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

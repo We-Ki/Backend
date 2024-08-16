@@ -57,8 +57,10 @@ router.post("/signin", function (req, res, next) {
       }
     )(req, res, next);
   } else {
-    req.flash("errors", errors);
-    res.redirect("/login");
+    res.send({
+      success: false,
+      message: "Incorrect Username or Password",
+    });
   }
 });
 
