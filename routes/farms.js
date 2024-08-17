@@ -11,7 +11,7 @@ router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Farm.find({})
+    Farm.find({ users: req.user._id })
       .populate("farmer")
       .then((farms) => {
         res.send({ success: true, message: farms });
@@ -27,13 +27,20 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     req.body.farmer = req.user._id;
-    Farm.create(req.body)
-      .then((farm) => {
-        return res.send({ success: false, message: farm._id });
-      })
-      .catch((err) => {
-        return res.send({ success: false, message: util.parseError(err) });
+    if (req.user.userGroup === "farmer") {
+      Farm.create(req.body)
+        .then((farm) => {
+          return res.send({ success: true, message: farm._id });
+        })
+        .catch((err) => {
+          return res.send({ success: false, message: util.parseError(err) });
+        });
+    } else {
+      return res.send({
+        success: false,
+        message: "Only farmer can create farm",
       });
+    }
   }
 );
 
