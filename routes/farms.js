@@ -45,7 +45,7 @@ router.post(
 );
 
 router.post(
-  "/water/:id",
+  "/:id/water",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     req.body.farm = req.params.id;
@@ -72,7 +72,7 @@ router.post(
 );
 
 router.post(
-  "/:id",
+  "/:id/join",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Farm.findById(req.params.id)
@@ -86,6 +86,21 @@ router.post(
       })
       .catch((err) => {
         return res.send({ success: false, message: util.parseError(err) });
+      });
+  }
+);
+
+router.get(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Farm.findById(req.params.id)
+      .populate("farmer")
+      .then((farm) => {
+        res.send({ success: true, message: farm });
+      })
+      .catch((error) => {
+        res.send({ success: false, message: utils.parseError(error) });
       });
   }
 );
