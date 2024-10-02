@@ -6,25 +6,25 @@ const userSchema = mongoose.Schema(
   {
     username: {
       type: String,
-      required: [true, "Username is required!"],
-      match: [/^.{4,12}$/, "Should be 4-12 characters!"],
+      required: [true, "사용자 명을 입력해주세요"],
+      match: [/^.{4,12}$/, "4~12 글자로 입력해주세요"],
       unique: true,
     },
     password: {
       type: String,
-      required: [true, "Password is required!"],
+      required: [true, "비밀번호를 입력해주세요"],
       select: false,
     },
     name: {
       type: String,
-      required: [true, "Name is required!"],
-      match: [/^.{4,12}$/, "Should be 4-12 characters!"],
+      required: [true, "성명을 입력해주세요"],
+      match: [/^.{2,12}$/, "2~12 글자로 입력해주세요"],
     },
     email: {
       type: String,
       match: [
         /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-        "Should be a vaild email address!",
+        "올바른 형식의 이메일 주소를 입력해주세요",
       ],
       trim: true,
     },
@@ -84,25 +84,19 @@ userSchema
 // 비밀번호 검증
 const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
 var passwordRegexErrorMessage =
-  "Should be minimum 8 characters of alphabet, number and contain special characters combination!";
+  "8글자 이상, 영문, 숫자, 특수문자를 조합하여 비밀번호를 입력해주세요";
 userSchema.path("password").validate(function (v) {
   var user = this;
   // 사용자 생성
   if (user.isNew) {
     if (!user.passwordConfirmation) {
-      user.invalidate(
-        "passwordConfirmation",
-        "Password Confirmation is required."
-      );
+      user.invalidate("passwordConfirmation", "비밀번호 한 번 더 입력해주세요");
     }
 
     if (!passwordRegex.test(user.password)) {
       user.invalidate("password", passwordRegexErrorMessage);
     } else if (user.password !== user.passwordConfirmation) {
-      user.invalidate(
-        "passwordConfirmation",
-        "Password Confirmation does not matched!"
-      );
+      user.invalidate("passwordConfirmation", "비밀번호가 일치하지 않습니다");
     }
   }
 
