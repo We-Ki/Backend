@@ -8,10 +8,25 @@ const Water = require("../models/Water");
 const User = require("../models/User");
 
 router.get(
-  "/",
+  "/joined",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Farm.find({ users: req.user._id })
+      .populate("farmer")
+      .then((farms) => {
+        res.send({ success: true, message: farms });
+      })
+      .catch((error) => {
+        res.send({ success: false, message: utils.parseError(error) });
+      });
+  }
+);
+
+router.get(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Farm.find({ users: { $nin: req.user._id } })
       .populate("farmer")
       .then((farms) => {
         res.send({ success: true, message: farms });
