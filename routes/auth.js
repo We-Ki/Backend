@@ -40,7 +40,7 @@ router.post("/signin", function (req, res, next) {
         if (!user) {
           return res.send({
             success: false,
-            message: "Incorrect Username or Password",
+            message: "사용자 명 혹은 비밀번호가 일치하지 않습니다",
           });
         }
         req.login(user, { session: false }, (err) => {
