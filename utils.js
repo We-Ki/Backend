@@ -8,7 +8,7 @@ utils.parseError = function (errors) {
       parsed[name] = { message: validationError.message };
     }
   } else if (errors.code == "11000" && errors.errmsg.indexOf("username") > 0) {
-    parsed.username = { message: "This username already exists!" };
+    parsed.username = { message: "이미 사용 중인 사용자 명입니다" };
   } else {
     parsed.unhandled = JSON.stringify(errors);
   }
