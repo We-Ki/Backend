@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const passport = require("../config/passport");
 const util = require("../utils");
+const mqtt = require("../config/mqtt");
 
 const Farm = require("../models/Farm");
 const Water = require("../models/Water");
@@ -78,6 +79,7 @@ router.post(
       })
       .then(async (water) => {
         await User.findByIdAndUpdate(req.user._id, { $inc: { point: 10 } });
+        mqtt.publish(`${req.params.id}/water`, "true");
         return res.send({ success: true, message: water._id });
       })
       .catch((err) => {
