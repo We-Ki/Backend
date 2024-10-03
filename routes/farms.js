@@ -68,7 +68,7 @@ router.post(
     Farm.findById(req.params.id)
       .populate("users")
       .then((farm) => {
-        if (farm.users.some((user) => user._id == req.user.id)) {
+        if (farm.users.some((user) => user._id === req.user.id)) {
           req.body.user = req.user._id;
           return Water.create(req.body);
         }
@@ -78,11 +78,14 @@ router.post(
         });
       })
       .then(async (water) => {
-        await User.findByIdAndUpdate(req.user._id, { $inc: { point: 10 } });
-        mqtt.publish(`${req.params.id}/water`, "true");
-        return res.send({ success: true, message: water._id });
+        if (water) {
+          await User.findByIdAndUpdate(req.user._id, { $inc: { point: 10 } });
+          mqtt.publish(`${req.params.id}/water`, "true");
+          return res.send({ success: true, message: water._id });
+        }
       })
       .catch((err) => {
+        console.log(err);
         return res.send({ success: false, message: util.parseError(err) });
       });
   }
