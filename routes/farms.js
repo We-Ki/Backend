@@ -71,14 +71,14 @@ router.post(
         if (farm.users.some((user) => user._id == req.user.id)) {
           req.body.user = req.user._id;
           return Water.create(req.body);
+        } else {
+          res.send({
+            success: false,
+            message: "You can only water where you joined in",
+          });
         }
-        return res.send({
-          success: false,
-          message: "You can only water where you joined in",
-        });
       })
       .then(async (water) => {
-        console.log(water);
         if (water) {
           await User.findByIdAndUpdate(req.user._id, { $inc: { point: 10 } });
           mqtt.publish(`${req.params.id}/water`, "true");
