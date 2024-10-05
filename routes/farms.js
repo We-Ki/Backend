@@ -30,7 +30,7 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Farm.find({
-      $or: [
+      $and: [
         { farmer: { $nin: req.user._id } },
         { users: { $nin: req.user._id } },
       ],
