@@ -111,6 +111,25 @@ router.post(
   }
 );
 
+router.delete(
+  "/:id/join",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Farm.findById(req.params.id)
+      .then(async (farm) => {
+        if (farm.farmer != req.user.id) {
+          farm.users.splice(req.user._id, 1);
+          await farm.save();
+          return res.send({ success: true, message: farm.users });
+        }
+        return res.send({ success: false, message: "Cannot join my Farm" });
+      })
+      .catch((err) => {
+        return res.send({ success: false, message: util.parseError(err) });
+      });
+  }
+);
+
 router.get(
   "/:id",
   passport.authenticate("jwt", { session: false }),
