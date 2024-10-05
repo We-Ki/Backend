@@ -122,7 +122,10 @@ router.delete(
       .then(async (farm) => {
         if (farm.farmer != req.user.id) {
           if (farm.users.indexOf(req.user._id) == -1)
-            return res.send({ success: false, message: "Already joined farm" });
+            return res.send({
+              success: false,
+              message: "Already Disjoined farm",
+            });
           else farm.users.splice(farm.users.indexOf(req.user._id), 1);
           await farm.save();
           return res.send({ success: true, message: farm.users });
