@@ -34,7 +34,7 @@ router.get(
   "/me/water",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Water.find({ user: req.params.username })
+    Water.find({ user: req.user._id })
       .then((water) => {
         if (!water)
           return res.send({
