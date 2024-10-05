@@ -35,6 +35,7 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Water.find({ user: req.user._id })
+      .populate("farm")
       .then((water) => {
         if (!water)
           return res.send({
