@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
+const Water = require("../models/Water");
 const utils = require("../utils");
 const passport = require("../config/passport");
 
@@ -26,6 +27,25 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     res.send({ success: true, message: req.user });
+  }
+);
+
+router.get(
+  "/me/water",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Water.find({ user: req.params.username })
+      .then((water) => {
+        if (!water)
+          return res.send({
+            success: false,
+            message: "Cannot found Water log",
+          });
+        res.send({ success: true, message: water });
+      })
+      .catch((error) => {
+        res.send({ success: false, message: utils.parseError(error) });
+      });
   }
 );
 
