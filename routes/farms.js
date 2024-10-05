@@ -100,6 +100,7 @@ router.post(
       .then(async (farm) => {
         if (farm.farmer != req.user.id) {
           farm.users.push(req.user._id);
+          farm.users = [...new Set(farm.users)];
           await farm.save();
           return res.send({ success: true, message: farm.users });
         }
@@ -119,6 +120,7 @@ router.delete(
       .then(async (farm) => {
         if (farm.farmer != req.user.id) {
           farm.users.splice(req.user._id, 1);
+          farm.users = [...new Set(farm.users)];
           await farm.save();
           return res.send({ success: true, message: farm.users });
         }
