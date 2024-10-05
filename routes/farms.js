@@ -101,6 +101,7 @@ router.post(
         if (farm.farmer != req.user.id) {
           farm.users.push(req.user._id);
           farm.users = [...new Set(farm.users)];
+          console.log(farm.users);
           await farm.save();
           return res.send({ success: true, message: farm.users });
         }
