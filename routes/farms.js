@@ -99,9 +99,10 @@ router.post(
     Farm.findById(req.params.id)
       .then(async (farm) => {
         if (farm.farmer != req.user.id) {
-          farm.users.push(req.user._id);
-          farm.users = [...new Set(farm.users)];
-          console.log(farm.users);
+          if (farm.users.indexOf(req.user._id) == -1)
+            farm.users.push(req.user._id);
+          else
+            return res.send({ success: false, message: "Already joined farm" });
           await farm.save();
           return res.send({ success: true, message: farm.users });
         }
@@ -120,8 +121,9 @@ router.delete(
     Farm.findById(req.params.id)
       .then(async (farm) => {
         if (farm.farmer != req.user.id) {
-          farm.users.splice(req.user._id, 1);
-          farm.users = [...new Set(farm.users)];
+          if (farm.users.indexOf(req.user._id) == -1)
+            return res.send({ success: false, message: "Already joined farm" });
+          else farm.users.splice(farm.users.indexOf(req.user._id), 1);
           await farm.save();
           return res.send({ success: true, message: farm.users });
         }
