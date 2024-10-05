@@ -29,7 +29,12 @@ router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Farm.find({ users: { $nin: req.user._id } })
+    Farm.find({
+      $or: [
+        { farmer: { $nin: req.user._id } },
+        { users: { $nin: req.user._id } },
+      ],
+    })
       .populate("farmer")
       .then((farms) => {
         res.send({ success: true, message: farms });
