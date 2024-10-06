@@ -167,13 +167,15 @@ router.delete(
     Farm.findById({ _id: req.params.id })
       .populate("farmer")
       .then((farm) => {
+        print(farm);
         if (farm.farmer._id === req.user._id) {
           return Farm.deleteOne({ _id: req.params.id });
+        } else {
+          return res.send({
+            success: false,
+            message: "Cannot delete other user's farm",
+          });
         }
-        return res.send({
-          success: false,
-          message: "Cannot delete other user's farm",
-        });
       })
       .then((result) => {
         console.log(result);
