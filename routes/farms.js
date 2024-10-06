@@ -164,21 +164,10 @@ router.delete(
   "/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Farm.findById(req.params.id)
-      .populate("farmer")
-      .then((farm) => {
-        print(farm);
-        if (farm.farmer._id === req.user._id) {
-          return Farm.deleteOne({ _id: req.params.id });
-        } else {
-          return res.send({
-            success: false,
-            message: "Cannot delete other user's farm",
-          });
-        }
-      })
+    Farm.findOneAndDelete({
+      $and: [{ farmer: req.user._id }, { _id: req.params.id }],
+    })
       .then((result) => {
-        console.log(result);
         if (!result.deletedCount)
           return res.send({
             success: false,
