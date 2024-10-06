@@ -155,7 +155,7 @@ router.get(
         res.send({ success: true, message: farm });
       })
       .catch((error) => {
-        res.send({ success: false, message: utils.parseError(error) });
+        res.send({ success: false, message: util.parseError(error) });
       });
   }
 );
