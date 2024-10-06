@@ -167,7 +167,6 @@ router.delete(
     Farm.findById(req.params.id)
       .then((farm) => {
         if (farm.farmer == req.user.id) {
-          res.send({ success: true, message: farm });
           return Farm.findByIdAndDelete(farm._id);
         } else {
           res.send({ success: false, message: farm });
