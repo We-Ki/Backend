@@ -175,11 +175,6 @@ router.delete(
       .then((result) => {
         if (result) {
           console.log(result);
-          if (!result.deletedCount)
-            res.send({
-              success: false,
-              message: `Cannot find farm ${req.params.id}`,
-            });
           res.send({
             success: true,
             message: `Delete farm ${req.params.id} Success`,
