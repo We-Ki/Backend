@@ -159,4 +159,35 @@ router.get(
       });
   }
 );
+
+router.delete(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Farm.findById({ _id: req.params.id })
+      .then((farm) => {
+        if (farm.farmer === req.user._id) {
+          return Farm.deleteOne({ _id: req.params.id });
+        }
+        return res.send({
+          success: false,
+          message: "Cannot delete other user's farm",
+        });
+      })
+      .then((result) => {
+        if (!result.deletedCount)
+          return res.send({
+            success: false,
+            message: `Cannot find farm ${req.params.id}`,
+          });
+        res.send({
+          success: true,
+          message: `Delete farm ${req.params.id} Success`,
+        });
+      })
+      .catch((err) => {
+        return res.send({ success: false, message: util.parseError(err) });
+      });
+  }
+);
 module.exports = router;
