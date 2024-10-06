@@ -164,21 +164,13 @@ router.delete(
   "/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Farm.findByIdAndDelete(req.params.id)
-      .then((result) => {
-        console.log(print);
-        if (!result.deletedCount)
-          return res.send({
-            success: false,
-            message: `Cannot find farm ${req.params.id}`,
-          });
-        return res.send({
-          success: true,
-          message: `Delete farm ${req.params.id} Success`,
-        });
+    Farm.findById(req.params.id)
+      .populate("farmer")
+      .then((farm) => {
+        res.send({ success: true, message: farm });
       })
-      .catch((err) => {
-        return res.send({ success: false, message: utils.parseError(err) });
+      .catch((error) => {
+        res.send({ success: false, message: utils.parseError(error) });
       });
   }
 );
