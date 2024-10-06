@@ -164,7 +164,7 @@ router.delete(
   "/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Farm.findById({ _id: req.params.id })
+    Farm.findById(req.params.id)
       .populate("farmer")
       .then((farm) => {
         print(farm);
