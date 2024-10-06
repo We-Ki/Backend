@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("../config/passport");
-const util = require("../utils");
+const utils = require("../utils");
 const mqtt = require("../config/mqtt");
 
 const Farm = require("../models/Farm");
@@ -56,7 +56,7 @@ router.post(
           return res.send({ success: true, message: farm._id });
         })
         .catch((err) => {
-          return res.send({ success: false, message: util.parseError(err) });
+          return res.send({ success: false, message: utils.parseError(err) });
         });
     } else {
       return res.send({
@@ -94,7 +94,7 @@ router.post(
       })
       .catch((err) => {
         console.log(err);
-        return res.send({ success: false, message: util.parseError(err) });
+        return res.send({ success: false, message: utils.parseError(err) });
       });
   }
 );
@@ -116,7 +116,7 @@ router.post(
         return res.send({ success: false, message: "Cannot join my Farm" });
       })
       .catch((err) => {
-        return res.send({ success: false, message: util.parseError(err) });
+        return res.send({ success: false, message: utils.parseError(err) });
       });
   }
 );
@@ -140,7 +140,7 @@ router.delete(
         return res.send({ success: false, message: "Cannot join my Farm" });
       })
       .catch((err) => {
-        return res.send({ success: false, message: util.parseError(err) });
+        return res.send({ success: false, message: utils.parseError(err) });
       });
   }
 );
@@ -155,7 +155,7 @@ router.get(
         res.send({ success: true, message: farm });
       })
       .catch((error) => {
-        res.send({ success: false, message: util.parseError(error) });
+        res.send({ success: false, message: utils.parseError(error) });
       });
   }
 );
@@ -165,8 +165,9 @@ router.delete(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Farm.findById({ _id: req.params.id })
+      .populate("farmer")
       .then((farm) => {
-        if (farm.farmer === req.user._id) {
+        if (farm.farmer._id === req.user._id) {
           return Farm.deleteOne({ _id: req.params.id });
         }
         return res.send({
@@ -175,18 +176,19 @@ router.delete(
         });
       })
       .then((result) => {
+        console.log(result);
         if (!result.deletedCount)
           return res.send({
             success: false,
             message: `Cannot find farm ${req.params.id}`,
           });
-        res.send({
+        return res.send({
           success: true,
           message: `Delete farm ${req.params.id} Success`,
         });
       })
       .catch((err) => {
-        return res.send({ success: false, message: util.parseError(err) });
+        return res.send({ success: false, message: utils.parseError(err) });
       });
   }
 );
