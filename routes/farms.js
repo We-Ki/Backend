@@ -75,7 +75,10 @@ router.post(
     Farm.findById(req.params.id)
       .populate("users")
       .then((farm) => {
-        if (farm.users.some((user) => user._id == req.user.id)) {
+        if (
+          farm.users.some((user) => user._id == req.user.id) ||
+          farm.farmer == req.user.id
+        ) {
           req.body.user = req.user._id;
           return Water.create(req.body);
         } else {
