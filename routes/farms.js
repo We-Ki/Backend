@@ -165,9 +165,10 @@ router.delete(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Farm.findOneAndDelete({
-      $and: [{ farmer: req.user.id }, { _id: req.params.id }],
+      _id: req.params.id,
     })
       .then((result) => {
+        console.log(print);
         if (!result.deletedCount)
           return res.send({
             success: false,
