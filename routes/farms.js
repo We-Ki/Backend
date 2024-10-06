@@ -169,20 +169,20 @@ router.delete(
         if (farm.farmer == req.user.id) {
           return Farm.findByIdAndDelete(farm._id);
         } else {
-          res.send({ success: false, message: farm });
           return undefined;
         }
       })
       .then((result) => {
         if (result) {
+          console.log(result);
           if (!result.deletedCount)
-            return res.send({
+            res.send({
               success: false,
-              message: `Cannot find farm ${req.params.username}`,
+              message: `Cannot find farm ${req.params.id}`,
             });
           res.send({
             success: true,
-            message: `Delete farm ${req.params.username} Success`,
+            message: `Delete farm ${req.params.id} Success`,
           });
         }
       })
