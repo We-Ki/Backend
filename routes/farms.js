@@ -165,9 +165,9 @@ router.delete(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Farm.findById(req.params.id)
-      .populate("farmer")
       .then((farm) => {
-        res.send({ success: true, message: farm });
+        if (farm.farmer == req.user.id)
+          res.send({ success: true, message: farm });
       })
       .catch((error) => {
         res.send({ success: false, message: utils.parseError(error) });
